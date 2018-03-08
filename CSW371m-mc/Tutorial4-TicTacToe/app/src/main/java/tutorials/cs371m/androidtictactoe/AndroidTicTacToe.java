@@ -99,17 +99,6 @@ public class AndroidTicTacToe extends AppCompatActivity {
         }
     }
 
-    private void setMove(char player, int location) {
-
-        mGame.setMove(player, location);
-        mBoardButtons[location].setEnabled(false);
-        mBoardButtons[location].setText(String.valueOf(player));
-        if (player == TicTacToeGame.HUMAN_PLAYER) {
-            mBoardButtons[location].setTextColor(getResources().getColor(R.color.xPieceColor));
-        } else {
-            mBoardButtons[location].setTextColor(getResources().getColor(R.color.oPieceColor));
-        }
-    }
 
     private void computerMove() {
         mInfoTextView.setText(R.string.computer_turn);
@@ -168,38 +157,6 @@ public class AndroidTicTacToe extends AppCompatActivity {
     }
 
     // Code below this point was added in tutorial 3.
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentManager fm = getFragmentManager();
-        switch (item.getItemId()) {
-            case R.id.new_game:
-                startNewGame();
-                return true;
-            case R.id.ai_difficulty:
-                int currentDifficulty = mGame.getDifficultyLevel().ordinal();
-                DifficultyDialogFragment difficultyDialogFragment
-                        = DifficultyDialogFragment.newInstance(currentDifficulty);
-                difficultyDialogFragment.show(fm, "difficulty");
-                return true;
-            case R.id.quit:
-                QuitDialogFragment quitDialogFragment = new QuitDialogFragment();
-                quitDialogFragment.show(fm, "quit");
-                return true;
-            case R.id.about:
-                startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     /**
      * Set the difficulty. Presumably called by DifficultyDialogFragment;
