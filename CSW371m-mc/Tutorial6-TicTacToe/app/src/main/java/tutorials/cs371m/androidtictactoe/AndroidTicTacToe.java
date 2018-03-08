@@ -144,71 +144,6 @@ public class AndroidTicTacToe extends AppCompatActivity {
         mSounds.play(soundId, 1, 1, 1, 0, 1);
     }
 
-    // Code below this point was added in tutorial 3.
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentManager fm = getFragmentManager();
-        switch (item.getItemId()) {
-            case R.id.new_game:
-                // if computer is in middle of pause, stop it
-                mPauseHandler.removeCallbacks(mRunnable);
-                startNewGame();
-                return true;
-            case R.id.ai_difficulty:
-                int currentDifficulty = mGame.getDifficultyLevel().ordinal();
-                DifficultyDialogFragment difficultyDialogFragment
-                        = DifficultyDialogFragment.newInstance(currentDifficulty);
-                difficultyDialogFragment.show(fm, "difficulty");
-                return true;
-            case R.id.quit:
-                QuitDialogFragment quitDialogFragment = new QuitDialogFragment();
-                quitDialogFragment.show(fm, "quit");
-                return true;
-            case R.id.reset_scores:
-                ResetScoresDialogFragment resetScoresDialogFragment = new ResetScoresDialogFragment();
-                resetScoresDialogFragment.show(fm, "reset");
-                return true;
-            case R.id.about:
-                startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * Set the difficulty. Presumably called by DifficultyDialogFragment;
-     *
-     * @param difficulty The new difficulty for the game.
-     */
-    public void setDifficulty(int difficulty) {
-        // check bounds;
-        if (difficulty < 0 || difficulty >= TicTacToeGame.DifficultyLevel.values().length) {
-            Log.d(TAG, "Unexpected difficulty: " + difficulty + "." +
-                    " Setting difficulty to Easy / 0.");
-            difficulty = 0; // if out of bounds set to 0
-        }
-        TicTacToeGame.DifficultyLevel newDifficulty
-                = TicTacToeGame.DifficultyLevel.values()[difficulty];
-
-        mGame.setDifficultyLevel(newDifficulty);
-        String message = "Difficulty set to " +
-                newDifficulty.toString().toLowerCase() + " .";
-
-        // Display the selected difficulty level
-        Toast.makeText(getApplicationContext(), message,
-                Toast.LENGTH_SHORT).show();
-
-    }
-
     // Code below here was added / updated in tutorial 4.
 
     // Set move in game logic and tell board view to redraw itself.
@@ -341,19 +276,6 @@ public class AndroidTicTacToe extends AppCompatActivity {
             String counter = String.valueOf(mWinData.getCount(outcome));
             mOutcomeCounterTextViews[outcome.ordinal()].setText(counter);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        SharedPreferences sharedPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        for (WinData.Outcome outcome : WinData.Outcome.values()) {
-            editor.putInt(outcome.name(), mWinData.getCount(outcome));
-        }
-        saveGameState(editor);
-        editor.apply();
     }
 
     private void saveGameState(SharedPreferences.Editor editor) {
